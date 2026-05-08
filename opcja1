@@ -1,0 +1,61 @@
+document.getElementById('register_button').addEventListener("click", (e) => {
+    e.preventDefault();
+
+    let blad = document.getElementById('blad');
+    blad.textContent = "";
+
+    let imie = document.getElementById('imie');
+    let nazwisko = document.getElementById('nazwisko');
+    let email = document.getElementById('email');
+    let haslo = document.getElementById('haslo');
+    let haslo2 = document.getElementById('haslo2');
+
+    // reset borderów zeby nie zostawaly czerwone
+    imie.style.border = "";
+    nazwisko.style.border = "";
+    email.style.border = "";
+    haslo.style.border = "";
+    haslo2.style.border = "";
+
+    //sprawdza czy imie nie jest puste
+    if (imie.value.trim() === "") {
+        imie.style.border = "2px solid red";
+        blad.textContent = "Podaj imię!";
+    }
+
+        //sprawdza czy nazwisko nie jest puste
+        else if (nazwisko.value.trim() === "") {
+            nazwisko.style.border = "2px solid red";
+            blad.textContent = "Podaj nazwisko!";
+        }
+
+        //sprawdza czy email nie jest puste
+        else if (email.value.trim() === "") {
+            email.style.border = "2px solid red";
+            blad.textContent = "Podaj email!";
+        }
+
+        //sprawdza czy haslo nie jest puste
+        else if (haslo.value.trim() === "") {
+            haslo.style.border = "2px solid red";
+            blad.textContent = "Podaj hasło!";
+        }
+
+        //sprawdza czy haslo2 nie jest puste
+        else if (haslo2.value.trim() === "") {
+            haslo2.style.border = "2px solid red";
+            blad.textContent = "Potwierdź hasło!";
+        }
+
+    // sparwdza czy hasal sa takie same jezli nie to zmienia border na carowny
+    else if (haslo.value.trim() !== haslo2.value.trim()) {
+        haslo.style.border = "2px solid red";
+        haslo2.style.border = "2px solid red";
+        blad.textContent = "Podane hasła się różnią!";
+    }
+
+    else {
+        // przenosi na strone logowania
+        window.location.href = "logowanie.html";
+    }
+});
