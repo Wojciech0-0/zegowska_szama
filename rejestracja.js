@@ -1,4 +1,8 @@
-document.getElementById('register_button').addEventListener("click", (e) => {
+
+let register_button = document.getElementById('register_button')
+
+if(register_button){
+register_button.addEventListener("click", (e) => {
     e.preventDefault();
 
     let blad = document.getElementById('blad');
@@ -57,8 +61,56 @@ document.getElementById('register_button').addEventListener("click", (e) => {
             blad.classList.remove("d-none");
         }
 
-    else {
-        blad.classList.add("d-none");
+      else {
+        let user = {
+            email: email.value.trim(),
+            password: haslo.value.trim()
+        };
+
+        localStorage.setItem("user", JSON.stringify(user));
+
         window.location.href = "logowanie.html";
     }
-});
+});}
+
+
+let login_button = document.getElementById('login_button')
+
+if (login_button){
+login_button.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    let email_logowanie = document.getElementById('email_logowanie');
+    let haslo_logowanie = document.getElementById('haslo_logowanie');
+    let blad_logowanie = document.getElementById('blad_logowanie');
+
+    blad_logowanie.textContent = "";
+    blad_logowanie.classList.add("d-none");
+
+    email_logowanie.style.border = "";
+    haslo_logowanie.style.border = "";
+
+    let savedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (!savedUser) {
+        blad_logowanie.textContent = "Brak konta! Zarejestruj się.";
+        blad_logowanie.classList.remove("d-none");
+        return;
+    }
+
+    if (email_logowanie.value.trim() !== savedUser.email) {
+        email_logowanie.style.border = "2px solid red";
+        blad_logowanie.textContent = "Nieprawidłowy email!";
+        blad_logowanie.classList.remove("d-none");
+        return;
+    }
+
+    if (haslo_logowanie.value.trim() !== savedUser.password) {
+        haslo_logowanie.style.border = "2px solid red";
+        blad_logowanie.textContent = "Nieprawidłowe hasło!";
+        blad_logowanie.classList.remove("d-none");
+        return;
+    }
+
+    window.location.href = "sklep.html";
+});}
