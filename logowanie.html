@@ -14,7 +14,7 @@
         
         <div class="bg-white border rounded-4 shadow-lg p-5 text-center" style="max-width: 400px; width: 100%;">
             
-            <form action="" method="post">
+            <form>
                 <div class="mb-4">
                     <img src="logo.png" alt="logo" class="img-fluid" style="max-height: 80px;">
                 </div>
@@ -24,18 +24,20 @@
                 </div>
                 
                 <div class="mb-3">
-                    <input type="email" name="email" class="form-control form-control-lg" placeholder="Adres e-mail...">
+                    <input type="email" name="email" class="form-control form-control-lg" placeholder="Adres e-mail..." id="email_logowanie">
                 </div>
                 
                 <div class="mb-3">
-                    <input type="password" name="password" class="form-control form-control-lg" placeholder="Hasło">
+                    <input type="password" name="password" class="form-control form-control-lg" placeholder="Hasło" id="haslo_logowanie">
                 </div>
 
                 <div class="text-end mb-4">
                     <a href="#" class="text-decoration-none text-muted small">Zapomniałeś hasła?</a>
                 </div>
                 
-                <button type="submit" class="btn btn-success btn-lg w-100 mb-3" style="background-color: #8db63f; border: none;">
+                <div id="blad_logowanie" class="alert alert-danger d-none"></div>
+
+                <button type="submit" class="btn btn-success btn-lg w-100 mb-3" style="background-color: #8db63f; border: none;" id="login_button">
                     Zaloguj się
                 </button>
 
@@ -46,5 +48,7 @@
             
         </div>
     </div>
+
+    <script src="rejestracja.js"></script>
 </body>
 </html>
