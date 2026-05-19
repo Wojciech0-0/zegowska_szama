@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sklep</title>
+
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="styl_sklep.css">
+</head>
+<?php
+
+$db = mysqli_connect('localhost','root','','zegowskaszama');
+?>
+
+<!-- fajne tlo -->
+<body style="background-image: url(background.png);">
+
+    <!-- header zaweira logo i ucznia -->
+    <header class="topbar">
+
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+                <img src="logo.png" alt="logo" class="logo">
+            </div>
+
+            <select class="form-select w-auto rounded-4">
+                <option>Uczeń</option>
+            </select>
+
+        </div>
+
+    </header>
+
+    <!-- main - zawiera cala oferte i mozliwosc dodawania produktow do koszyka -->
+    <main class="container py-5">
+
+    <div class="shop-wrapper mx-auto">
+
+        <!-- TYTUŁ -->
+        <h1 class="text-center fw-bold mb-5">
+            Nasza Oferta
+        </h1>
+
+        <!-- Kategorie -->
+        <div class="d-flex justify-content-center gap-3 flex-wrap mb-5">
+
+            <button class="btn category-btn active" id="Wszystko">
+                Wszystko
+            </button>
+
+            <button class="btn category-btn" id="Jedzenie">
+                🥪 Jedzenie
+            </button>
+
+            <button class="btn category-btn" id="Napoje">
+                🧃 Napoje
+            </button>
+
+            <button class="btn category-btn" id="Przekaski">
+                🍫 Przekąski
+            </button>
+
+        </div>
+
+        <!-- PRODUKTY -->
+        <div class="row justify-content-center g-4" id="produktyS">
+
+
+
+            <!-- karta -->
+             <?php
+
+            $sql = "SELECT produkty.id, produkty.Nazwa, produkty.Cena, produkty.Kategoria FROM produkty";
+
+            $wynik1 = mysqli_query($db, $sql);
+
+            while($d = mysqli_fetch_array($wynik1)){
+                if($d['Kategoria'] == "jedzenie"){
+                    $zdjecie = "jedzenie.png";
+                }else if($d['Kategoria'] == "przekąski"){
+                    $zdjecie = "przekaski.png";
+                }else if($d['Kategoria'] == "napoje"){
+                    $zdjecie = "napoje.png";
+                }
+                echo '<div class="col-xl-3 col-lg-4 col-md-6'. $d['Kategoria'].'">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100 product-card">
+
+                    <div class="product-image text-center p-4">
+                        <img src="'.$zdjecie.'" alt="" class="img-fluid">
+                    </div>
+
+                    <div class="card-body d-flex flex-column">
+
+                        <h4 class="fw-bold">
+                            '.$d['Nazwa'].'
+                        </h4>
+
+                        <p class="text-secondary flex-grow-1">
+                            Opis
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+
+                            <span class="fs-3 fw-bold">
+                                '.$d['Cena'].' zł
+                            </span>
+
+                            <button class="btn add-btn p-1"> + </button>
+                        </div>
+                    </div>
+                </div>
+                </div>';
+            }
+
+             ?>
+
+<!-- div zamykajacy sekcje z kartami-->
+        </div>
+
+
+        <!-- BUTTON -->
+        <div class="text-center mt-5">
+
+            <button class="btn summary-btn shadow-sm">
+                Podsumowanie Koszyka
+            </button>
+
+        </div>
+
+    </div>
+
+    <script>
+        const Wszystko = document.getElementById('Wszystko');
+        const Jedzenie = document.getElementById('Jedzenie');
+        const Przekaski = document.getElementById('Przekaski');
+        const Napoje = document.getElementById('Napoje');
+        const produktyS = document.getElementById('produktyS');
+
+        Wszystko.addEventListener('click',()=>{
+            fetch('wyswietl.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `kategoria=${encodeURIComponent('Wszystko')}`
+            }).then(res => res.text())
+    .then(data => {
+        document.getElementById('produktyS').innerHTML = data;
+    });
+        });
+
+        Jedzenie.addEventListener('click',()=>{
+            fetch('wyswietl.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `kategoria=${encodeURIComponent('Jedzenie')}`
+            }).then(res => res.text())
+    .then(data => {
+        document.getElementById('produktyS').innerHTML = data;
+    });
+        });
+
+        Przekaski.addEventListener('click',()=>{
+            fetch('wyswietl.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `kategoria=${encodeURIComponent('Przekąski')}`
+            }).then(res => res.text())
+    .then(data => {
+        document.getElementById('produktyS').innerHTML = data;
+    });
+        });
+
+        Napoje.addEventListener('click',()=>{
+            fetch('wyswietl.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `kategoria=${encodeURIComponent('Napoje')}`
+            }).then(res => res.text())
+    .then(data => {
+        document.getElementById('produktyS').innerHTML = data;
+    });
+        });
+    </script>
+
+</main>
+
+</body>
+</html>
