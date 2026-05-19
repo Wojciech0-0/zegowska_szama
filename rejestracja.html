@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rejestracja</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="styl.css">
 </head>
@@ -23,27 +24,29 @@
 
                 <div class="mb-3">
                     <input type="text" name="Imie"
-                    class="form-control form-control-lg" placeholder="Imie">
+                    class="form-control form-control-lg" placeholder="Imie" id="imie">
                 </div>
 
                 <div class="mb-3">
                     <input type="text" name="Nazwisko" class="form-control form-control-lg"
-                    placeholder="Nazwisko">
+                    placeholder="Nazwisko" id="nazwisko">
                 </div>
                 
                 <div class="mb-3">
-                    <input type="email" name="email" class="form-control form-control-lg" placeholder="Adres e-mail...">
+                    <input type="email" name="email" class="form-control form-control-lg" placeholder="Adres e-mail..." id="email">
                 </div>
                 
                 <div class="mb-3">
-                    <input type="password" name="password" class="form-control form-control-lg" placeholder="Hasło">
+                    <input type="password" name="password" class="form-control form-control-lg" placeholder="Hasło" id="haslo">
                 </div>
 
                 <div class="mb-3">
-                    <input type="password" name="password2" class="form-control form-control-lg" placeholder="Potwierdź hasło">
+                    <input type="password" name="password2" class="form-control form-control-lg" placeholder="Potwierdź hasło" id="haslo2">
                 </div>
                 
-                <button type="submit" class="btn btn-success btn-lg w-100 mb-3" style="background-color: #8db63f; border: none;">
+                <div id="blad" class="alert alert-danger d-none"></div>
+
+                <button type="submit" class="btn btn-success btn-lg w-100 mb-3" style="background-color: #8db63f; border: none;" id="register_button">
                     Zarejestruj się
                 </button>
 
@@ -51,5 +54,6 @@
             
         </div>
     </div>
+    <script src="rejestracja.js"></script>
 </body>
 </html>

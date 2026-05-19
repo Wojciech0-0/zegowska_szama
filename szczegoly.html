@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Szczegóły Zamówienia</title>
+
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body style="background-image: url(background.png);">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+
+            <div class="d-flex align-items-center gap-3">
+                <img src="logo.png" alt="logo" class="logo">
+            </div>
+
+            <select class="form-select w-auto rounded-4">
+                <option>Anna (Admin)</option>
+            </select>
+
+        </div>
+
+    </header>
+
+    <!-- MAIN -->
+    <main class="container-fluid">
+
+        <div class="row min-vh-100">
+
+            <!-- opcje z lewej strony(sidebar) -->
+            <aside class="col-xl-3 col-lg-4 sidebar p-4 bg-light">
+
+                <h5 class="sidebar-title mb-4">
+                    ZAMÓWIENIA
+                </h5>
+
+                <div class="d-flex flex-column gap-2">
+
+                    <button class="btn menu-btn text-start historia-btn">
+                        🏠 Historia
+                    </button>
+
+                    <button class="btn menu-btn text-start zamowienia-btn">
+                        📋 Zamówienia
+                    </button>
+
+                    <button class="btn menu-btn active text-start szczegoly-btn">
+                        📄 Szczegóły
+                    </button>
+
+                    <button class="btn menu-btn text-start magazyn-btn">
+                        📦 Stan Magazynu
+                    </button>
+
+                </div>
+
+                <hr class="my-4">
+
+                <div class="d-flex flex-column gap-2">
+
+                    <button class="btn menu-btn text-start pytania-btn">
+                        ❓ Pytania
+                    </button>
+
+                    <button class="btn menu-btn text-start">
+                        ↪ Profil
+                    </button>
+
+                </div>
+
+            </aside>
+
+            <!-- CONTENT -->
+            <section class="col-xl-9 col-lg-8 p-5">
+
+                <h1 class="fw-bold text-center mb-5">
+                    Szczegóły Zamówienia
+                </h1>
+
+                <!-- GŁÓWNA KARTA -->
+                <div class="card border-0 shadow-sm rounded-4 p-5">
+
+                    <!-- dane ucznica ktoryzmowil cos w sklepiku -->
+                    <div class="d-flex align-items-center gap-4 mb-5">
+
+                        <img src="kanapka.png"
+                             class="order-img"
+                             alt="produkt">
+
+                        <div>
+
+                            <h2 class="fw-bold mb-1">
+                                Marek P.
+                            </h2>
+
+                            <p class="text-secondary m-0">
+                                Klasa 2TI
+                            </p>
+
+                            <span class="badge status-badge mt-3">
+                                Oczekiwanie
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- informacje na temat zamowienia - numer,godzina,cena -->
+                    <div class="row g-4 mb-5">
+
+                        <div class="col-md-4">
+
+                            <div class="info-box p-4 rounded-4 shadow-sm">
+
+                                <h6 class="text-secondary">
+                                    Numer Zamówienia
+                                </h6>
+
+                                <h4 class="fw-bold">
+                                    #00021
+                                </h4>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <div class="info-box p-4 rounded-4 shadow-sm">
+
+                                <h6 class="text-secondary">
+                                    Godzina
+                                </h6>
+
+                                <h4 class="fw-bold">
+                                    13:00
+                                </h4>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <div class="info-box p-4 rounded-4 shadow-sm">
+
+                                <h6 class="text-secondary">
+                                    Łączna Cena
+                                </h6>
+
+                                <h4 class="fw-bold text-success">
+                                    12.50 zł
+                                </h4>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- grupa na produkty-->
+                    <h3 class="fw-bold mb-4">
+                        Zamówione Produkty
+                    </h3>
+
+                    <!-- PRODUKT -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 mb-4">
+
+                        <div class="row align-items-center">
+
+                            <div class="col-md-2 text-center">
+
+                                <img src="kanapka.png"
+                                     class="img-fluid"
+                                     style="max-height: 90px;">
+
+                            </div>
+
+                            <div class="col-md-5">
+
+                                <h5 class="fw-bold">
+                                    Kanapka z Szynką
+                                </h5>
+
+                                <p class="text-secondary m-0">
+                                    Sałata, pomidor, szynka
+                                </p>
+
+                            </div>
+
+                            <div class="col-md-2 text-center">
+
+                                <span class="fw-bold">
+                                    x2
+                                </span>
+
+                            </div>
+
+                            <div class="col-md-3 text-end">
+
+                                <span class="fw-bold fs-4">
+                                    8.00 zł
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- PRODUKT -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3 mb-4">
+
+                        <div class="row align-items-center">
+
+                            <div class="col-md-2 text-center">
+
+                                <img src="sok.png"
+                                     class="img-fluid"
+                                     style="max-height: 90px;">
+
+                            </div>
+
+                            <div class="col-md-5">
+
+                                <h5 class="fw-bold">
+                                    Sok Jabłkowy
+                                </h5>
+
+                                <p class="text-secondary m-0">
+                                    250ml
+                                </p>
+
+                            </div>
+
+                            <div class="col-md-2 text-center">
+
+                                <span class="fw-bold">
+                                    x1
+                                </span>
+
+                            </div>
+
+                            <div class="col-md-3 text-end">
+
+                                <span class="fw-bold fs-4">
+                                    4.50 zł
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- przyciski -->
+                    <div class="d-flex justify-content-end gap-3 mt-5">
+
+                        <button class="btn btn-warning rounded-4 px-4 py-2">
+                            Zmień Status
+                        </button>
+
+                        <button class="btn btn-success rounded-4 px-4 py-2">
+                            Oznacz jako Gotowe
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
