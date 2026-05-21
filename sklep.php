@@ -75,7 +75,7 @@ $db = mysqli_connect('localhost','root','','zegowskaszama');
             <!-- karta -->
              <?php
 
-            $sql = "SELECT produkty.id, produkty.Nazwa, produkty.Cena, produkty.Kategoria, produkty.opis FROM produkty";
+            $sql = "SELECT produkty.id, produkty.Nazwa, produkty.Cena, produkty.Kategoria, produkty.opis FROM produkty ORDER BY produkty.Nazwa ASC";
 
             $wynik1 = mysqli_query($db, $sql);
 

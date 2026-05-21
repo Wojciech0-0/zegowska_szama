@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 21, 2026 at 09:39 PM
+-- Generation Time: May 21, 2026 at 09:59 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -33,6 +33,18 @@ CREATE TABLE `admin` (
   `Nazwisko` varchar(35) NOT NULL,
   `Login` varchar(35) NOT NULL,
   `Hasło` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `koszyk`
+--
+
+CREATE TABLE `koszyk` (
+  `id` int(11) NOT NULL,
+  `id_produktu` int(11) NOT NULL,
+  `id_uzytkownika` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -118,7 +130,8 @@ CREATE TABLE `użytkownicy` (
 CREATE TABLE `zamówienia` (
   `id` int(11) NOT NULL,
   `id_użytkownika` int(11) UNSIGNED NOT NULL,
-  `id_produktu` int(11) NOT NULL
+  `id_produktu` int(11) NOT NULL,
+  `indeks` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -131,6 +144,14 @@ CREATE TABLE `zamówienia` (
 ALTER TABLE `admin`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `Hasło` (`Hasło`);
+
+--
+-- Indexes for table `koszyk`
+--
+ALTER TABLE `koszyk`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_produktu` (`id_produktu`,`id_uzytkownika`),
+  ADD KEY `id_uzytkownika` (`id_uzytkownika`);
 
 --
 -- Indexes for table `produkty`
@@ -166,6 +187,12 @@ ALTER TABLE `admin`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `koszyk`
+--
+ALTER TABLE `koszyk`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `produkty`
 --
 ALTER TABLE `produkty`
@@ -186,6 +213,13 @@ ALTER TABLE `zamówienia`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `koszyk`
+--
+ALTER TABLE `koszyk`
+  ADD CONSTRAINT `koszyk_ibfk_1` FOREIGN KEY (`id_produktu`) REFERENCES `produkty` (`id`),
+  ADD CONSTRAINT `koszyk_ibfk_2` FOREIGN KEY (`id_uzytkownika`) REFERENCES `użytkownicy` (`id`);
 
 --
 -- Constraints for table `zamówienia`

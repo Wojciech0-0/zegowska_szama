@@ -5,9 +5,9 @@
     $kategoria = $_POST['kategoria'];
 
     if($kategoria!="Wszystko"){
-    $sql = "SELECT produkty.id, produkty.Nazwa, produkty.Cena, produkty.Kategoria, produkty.opis FROM produkty WHERE produkty.Kategoria = '$kategoria'";
+    $sql = "SELECT produkty.id, produkty.Nazwa, produkty.Cena, produkty.Kategoria, produkty.opis FROM produkty WHERE produkty.Kategoria = '$kategoria' ORDER BY produkty.Nazwa ASC";
     }else{
-    $sql = "SELECT produkty.id, produkty.Nazwa, produkty.Cena, produkty.Kategoria, produkty.opis FROM produkty";
+    $sql = "SELECT produkty.id, produkty.Nazwa, produkty.Cena, produkty.Kategoria, produkty.opis FROM produkty ORDER BY produkty.Nazwa ASC";
     }
 
 
