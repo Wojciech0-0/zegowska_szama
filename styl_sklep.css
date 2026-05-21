@@ -66,12 +66,11 @@ body{
     width: 45px;
     height: 45px;
 
-    font-size: 28px;
+    font-size: 23px;
     font-weight: bold;
 
     border-radius: 12px;
     padding: 5px;
-    text-align: center;
 }
 
 .add-btn:hover{

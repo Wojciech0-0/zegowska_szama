@@ -75,7 +75,7 @@ $db = mysqli_connect('localhost','root','','zegowskaszama');
             <!-- karta -->
              <?php
 
-            $sql = "SELECT produkty.id, produkty.Nazwa, produkty.Cena, produkty.Kategoria FROM produkty";
+            $sql = "SELECT produkty.id, produkty.Nazwa, produkty.Cena, produkty.Kategoria, produkty.opis FROM produkty";
 
             $wynik1 = mysqli_query($db, $sql);
 
@@ -87,7 +87,7 @@ $db = mysqli_connect('localhost','root','','zegowskaszama');
                 }else if($d['Kategoria'] == "napoje"){
                     $zdjecie = "napoje.png";
                 }
-                echo '<div class="col-xl-3 col-lg-4 col-md-6'. $d['Kategoria'].'">
+                echo '<div class="col-xl-3 col-lg-4 col-md-6 mx-sm-0 mx-3'. $d['Kategoria'].'">
 
                 <div class="card border-0 shadow-sm rounded-4 h-100 product-card">
 
@@ -102,7 +102,7 @@ $db = mysqli_connect('localhost','root','','zegowskaszama');
                         </h4>
 
                         <p class="text-secondary flex-grow-1">
-                            Opis
+                            '.$d['opis'].'
                         </p>
 
                         <div class="d-flex justify-content-between align-items-center mt-3">
@@ -111,7 +111,7 @@ $db = mysqli_connect('localhost','root','','zegowskaszama');
                                 '.$d['Cena'].' zł
                             </span>
 
-                            <button class="btn add-btn p-1"> + </button>
+                            <button class="btn add-btn p-1 d-flex justify-content-center align-content-center"> + </button>
                         </div>
                     </div>
                 </div>
@@ -150,6 +150,8 @@ $db = mysqli_connect('localhost','root','','zegowskaszama');
             }).then(res => res.text())
     .then(data => {
         document.getElementById('produktyS').innerHTML = data;
+        UsunKlasy();
+        Wszystko.classList.add('active');
     });
         });
 
@@ -162,6 +164,8 @@ $db = mysqli_connect('localhost','root','','zegowskaszama');
     .then(data => {
         document.getElementById('produktyS').innerHTML = data;
     });
+        UsunKlasy();
+        Jedzenie.classList.add('active');
         });
 
         Przekaski.addEventListener('click',()=>{
@@ -172,7 +176,10 @@ $db = mysqli_connect('localhost','root','','zegowskaszama');
             }).then(res => res.text())
     .then(data => {
         document.getElementById('produktyS').innerHTML = data;
+        
     });
+        UsunKlasy();
+        Przekaski.classList.add('active');
         });
 
         Napoje.addEventListener('click',()=>{
@@ -183,8 +190,18 @@ $db = mysqli_connect('localhost','root','','zegowskaszama');
             }).then(res => res.text())
     .then(data => {
         document.getElementById('produktyS').innerHTML = data;
+        
     });
+        UsunKlasy();
+        Napoje.classList.add('active');
         });
+
+        function UsunKlasy(){
+            Wszystko.classList.remove('active');
+            Jedzenie.classList.remove('active');
+            Napoje.classList.remove('active');
+            Przekaski.classList.remove('active');
+        }
     </script>
 
 </main>

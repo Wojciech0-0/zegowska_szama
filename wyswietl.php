@@ -5,9 +5,9 @@
     $kategoria = $_POST['kategoria'];
 
     if($kategoria!="Wszystko"){
-    $sql = "SELECT produkty.id, produkty.Nazwa, produkty.Cena, produkty.Kategoria FROM produkty WHERE produkty.Kategoria = '$kategoria'";
+    $sql = "SELECT produkty.id, produkty.Nazwa, produkty.Cena, produkty.Kategoria, produkty.opis FROM produkty WHERE produkty.Kategoria = '$kategoria'";
     }else{
-    $sql = "SELECT produkty.id, produkty.Nazwa, produkty.Cena, produkty.Kategoria FROM produkty";
+    $sql = "SELECT produkty.id, produkty.Nazwa, produkty.Cena, produkty.Kategoria, produkty.opis FROM produkty";
     }
 
 
@@ -22,7 +22,7 @@
                 }else if($d['Kategoria'] == "napoje"){
                     $zdjecie = "napoje.png";
                 }
-                echo '<div class="col-xl-3 col-lg-4 col-md-6'. $d['Kategoria'].'">
+                echo '<div class="col-xl-3 col-lg-4 col-md-6 mx-sm-0 mx-3'. $d['Kategoria'].'">
 
                 <div class="card border-0 shadow-sm rounded-4 h-100 product-card">
 
@@ -37,7 +37,7 @@
                         </h4>
 
                         <p class="text-secondary flex-grow-1">
-                            Opis
+                            '.$d['opis'].'
                         </p>
 
                         <div class="d-flex justify-content-between align-items-center mt-3">
@@ -46,7 +46,7 @@
                                 '.$d['Cena'].' zł
                             </span>
 
-                            <button class="btn add-btn p-1"> + </button>
+                            <button class="btn add-btn d-flex p-1 justify-content-center align-content-center"> + </button>
                         </div>
                     </div>
                 </div>
