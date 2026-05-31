@@ -129,7 +129,7 @@ if ($wynik && mysqli_num_rows($wynik) == 1) {
                 <a href="szczegoly.php" class="text-decoration-none">
                     <button class="btn menu-btn text-start w-100 active">Anuluj edycję profilu</button>
                 </a>
-                <a href="historiaZamowien.php" class="text-decoration-none">
+                <a href="historia.php" class="text-decoration-none">
                     <button class="btn menu-btn text-start w-100">📋 Historia zamówień</button>
                 </a>
                 <a href="zmianaHasla.php" class="text-decoration-none">
@@ -161,7 +161,7 @@ if ($wynik && mysqli_num_rows($wynik) == 1) {
                     <a href="szczegoly.php" class="text-decoration-none">
                         <button class="btn menu-btn text-start w-100 active">👤 Szczegóły konta</button>
                     </a>
-                    <a href="historiaZamowien.php" class="text-decoration-none">
+                    <a href="historia.php" class="text-decoration-none">
                         <button class="btn menu-btn text-start w-100">📋 Historia zamówień</button>
                     </a>
                     <a href="zmianaHasla.php" class="text-decoration-none">

@@ -116,7 +116,7 @@ if ($status !== 'admin') {
                             📄 Szczegóły konta
                         </button>
                     </a>
-                    <a href="historiaZamowien.php" class="text-decoration-none">
+                    <a href="historia.php" class="text-decoration-none">
                         <button class="btn menu-btn text-start w-100">
                             📋 Historia zamówień
                         </button>
@@ -173,7 +173,7 @@ if ($status !== 'admin') {
                                 📄 Szczegóły konta
                             </button>
                         </a>
-                        <a href="historiaZamowien.php" class="text-decoration-none">
+                        <a href="historia.php" class="text-decoration-none">
                             <button class="btn menu-btn text-start w-100">
                                 📋 Historia zamówień
                             </button>
