@@ -43,11 +43,8 @@
 
                         <div class="d-flex justify-content-between align-items-center mt-3">
 
-                            <span class="fs-3 fw-bold">
-                                '.$d['Cena'].' zł
-                            </span>
-
-                            <button class="btn add-btn d-flex p-1 justify-content-center align-content-center"> + </button>
+                            <span class="fs-3 fw-bold">' . number_format($d['Cena'], 2, ',', '') . ' zł</span>
+                                <a href="dodajDoKoszyka.php?id=' . (int)$d['id'] . '" class="btn add-btn p-0 d-flex justify-content-center align-items-center text-white text-decoration-none" style="width: 40px; height: 40px; font-size: 24px; line-height: 1; border-radius: 50%;">+</a>
                         </div>
                     </div>
                 </div>
