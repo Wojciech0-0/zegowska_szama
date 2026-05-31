@@ -1,21 +1,38 @@
 <?php
+// Uruchomienie lub wznowienie istniejącej sesji, aby sprawdzić uprawnienia użytkownika
 session_start();
 
-// Sprawdzamy błędy
+// --- KONFIGURACJA RAPORTOWANIA BŁĘDÓW ---
+// Włączenie wyświetlania błędów bezpośrednio na stronie (przydatne w fazie deweloperskiej)
 ini_set('display_errors', 1);
+// Włączenie wyświetlania błędów, które występują podczas uruchamiania PHP (np. błędy składni w innych plikach)
 ini_set('display_startup_errors', 1);
+// Raportowanie absolutnie wszystkich typów błędów, ostrzeżeń i uwag (E_ALL)
 error_reporting(E_ALL);
 
+
+// --- KONTROLA DOSTĘPU (AUTORYZACJA) ---
 // TYLKO ADMIN MA TU WSTĘP
+// Sprawdzenie, czy użytkownik NIE jest zalogowany (brak 'user_id') LUB czy jego identyfikator NIE jest równy 'admin'
 if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== 'admin') {
+    // Jeśli warunek jest spełniony (użytkownik nie jest adminem), przekieruj go na stronę główną sklepu
     header("Location: sklep.php");
+    // Przerwij dalsze wykonywanie skryptu, aby zablokować ładowanie panelu administracyjnego
     exit;
 }
 
+
+// --- POŁĄCZENIE Z BAZĄ DANYCH ---
+// Nawiązanie połączenia z bazą danych MySQL (host, użytkownik, hasło, nazwa bazy danych)
 $db = mysqli_connect('localhost', 'root', '', 'zegowskaszama');
+
+// Sprawdzenie, czy połączenie z bazą się powiodło
 if (!$db) {
+    // Jeśli wystąpił błąd, zatrzymaj skrypt i wyświetl komunikat o błędzie połączenia
     die("Błąd połączenia z bazą: " . mysqli_connect_error());
 }
+
+// Ustawienie systemu kodowania znaków na utf8mb4 w celu poprawnego wsparcia polskich znaków i emoji
 mysqli_set_charset($db, "utf8mb4");
 ?>
 <!DOCTYPE html>
@@ -153,10 +170,23 @@ mysqli_set_charset($db, "utf8mb4");
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Definicja funkcji obsługującej proces wylogowania użytkownika
         const ObslugaWylogowania = () => {
-            fetch('wyloguj.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-            .then(() => { window.location.href = 'logowanie.php'; });
+            // Wysłanie asynchronicznego żądania POST do pliku 'wyloguj.php' (który czyści sesję na serwerze)
+            fetch('wyloguj.php', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' } 
+            })
+            // Po pomyślnym wykonaniu żądania (odpowiedź z serwera) następuje przekierowanie
+            .then(() => { 
+                // Przeniesienie użytkownika na stronę logowania
+                window.location.href = 'logowanie.php'; 
+            });
         };
+
+        // Podpięcie funkcji wylogowania pod przyciski w wersji na komputer (desktop) oraz telefon (mobile).
+        // Użycie znaku zapytania `?.` (Optional Chaining) zapobiega powstawaniu błędów w konsoli,
+        // jeśli dany przycisk nie znajduje się na aktualnie wyświetlanej podstronie.
         document.querySelector('.desktop-logout-btn')?.addEventListener('click', ObslugaWylogowania);
         document.querySelector('.mobile-logout-btn')?.addEventListener('click', ObslugaWylogowania);
     </script>

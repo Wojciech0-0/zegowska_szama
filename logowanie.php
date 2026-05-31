@@ -1,59 +1,82 @@
 <?php
+// Uruchomienie lub wznowienie sesji (potrzebne do zapisu danych zalogowanego użytkownika)
 session_start();
-$komunikat = "";
-$klasa_komunikatu = "d-none";
 
+// Inicjalizacja zmiennych do obsługi komunikatów dla użytkownika (np. o błędzie lub sukcesie)
+$komunikat = "";
+$klasa_komunikatu = "d-none"; // Domyślnie klasa CSS ukrywająca element (np. w Bootstrapie)
+
+// Sprawdzenie, czy formularz został przesłany metodą POST oraz czy kliknięto przycisk "zaloguj"
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['zaloguj'])) {
     
+    // Nawiązanie połączenia z bazą danych
     $db = mysqli_connect('localhost', 'root', '', 'zegowskaszama');
 
+    // Weryfikacja połączenia
     if (!$db) {
         die("Błąd połączenia z bazą: " . mysqli_connect_error());
     }
 
+    // Pobranie danych z formularza, usunięcie zbędnych spacji (trim) 
+    // oraz zabezpieczenie adresu e-mail przed atakami SQL Injection
     $email = mysqli_real_escape_string($db, trim($_POST['email']));
     $haslo = trim($_POST['password']);
 
+    // Walidacja – sprawdzenie, czy pola nie są puste
     if (empty($email) || empty($haslo)) {
         $komunikat = "Uzupełnij wszystkie pola!";
-        $klasa_komunikatu = "alert-danger";
+        $klasa_komunikatu = "alert-danger"; // Czerwona ramka błędu
     } else {
+        // Przygotowanie zapytania sprawdzającego tabelę zwykłych użytkowników
         $sql = "SELECT * FROM użytkownicy WHERE Email = '$email'";
         $result = mysqli_query($db, $sql);
+        
+        // Przygotowanie zapytania sprawdzającego tabelę administratorów
         $sql1 = "SELECT * FROM `admin` WHERE Email = '$email'";
         $result1 = mysqli_query($db, $sql1);
 
+        // 1. KROK: Sprawdzenie, czy podany e-mail należy do administratora
         if(mysqli_num_rows($result1) == 1){
             $admin = mysqli_fetch_assoc($result1);
 
+            // Weryfikacja hasła admina (uwaga: w tym miejscu porównywany jest czysty tekst, a nie hash)
             if($haslo == $admin['Hasło']){
+                // Zapisanie roli administratora w sesji
                 $_SESSION['user_id'] = 'admin';
 
                 $komunikat = "Zalogowano pomyślnie!";
-                $klasa_komunikatu = "alert-success";
+                $klasa_komunikatu = "alert-success"; // Zielona ramka sukcesu
+                // Przekierowanie do panelu admina po 1 sekundzie
                 header("refresh:1; url=panelAdmina.php");
             }
-        }else{
+        } else {
+            // 2. KROK: Jeśli to nie admin, sprawdzenie czy podany e-mail należy do zwykłego użytkownika
             if (mysqli_num_rows($result) == 1) {
                 $user = mysqli_fetch_assoc($result);
                 
+                // Bezpieczna weryfikacja hasła użytkownika (porównanie wpisanego hasła z hashem z bazy)
                 if (password_verify($haslo, $user['Haslo'])) {
+                    // Zapisanie ID oraz imienia użytkownika w sesji
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['user_imie'] = $user['Imie'];
 
                     $komunikat = "Zalogowano pomyślnie!";
                     $klasa_komunikatu = "alert-success";
+                    // Przekierowanie do sklepu po 1 sekundzie
                     header("refresh:1; url=sklep.php");
                 } else {
+                    // Jeśli hash hasła się nie zgadza
                     $komunikat = "Nieprawidłowe hasło!";
                     $klasa_komunikatu = "alert-danger";
                 }
             } else {
+                // Jeśli adres e-mail nie istnieje ani w tabeli adminów, ani użytkowników
                 $komunikat = "Nie znaleziono użytkownika o podanym adresie e-mail!";
                 $klasa_komunikatu = "alert-danger";
             }
         }
     }
+    // Zamknięcie połączenia z bazą danych na koniec działania skryptu
     mysqli_close($db);
 }
 ?>
@@ -110,11 +133,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['zaloguj'])) {
     </div>
 
     <script>
+        // Pobranie elementu (np. linku lub przycisku) o ID 'zapomniales'
+        // Prawdopodobnie odnosi się do sekcji "Zapomniałeś hasła?"
         const zapomniales = document.getElementById('zapomniales');
 
-        zapomniales.addEventListener('click',()=>{
-            alert("To kiepso :(");
-        })
+        // Podpięcie nasłuchiwacza zdarzeń na kliknięcie w ten element
+        zapomniales.addEventListener('click', () => {
+            // Wyświetlenie mało pomocnego, ale za to bardzo empatycznego komunikatu dla zapominalskiego użytkownika ;)
+            alert("To kiepsko :(");
+        });
     </script>
 </body>
 </html>

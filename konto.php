@@ -128,6 +128,11 @@ if ($status !== 'admin') {
                             🔑 Zmień hasło
                         </button>
                     </a>
+                    <a href="pytania.html" class="text-decoration-none">
+                        <button class="btn menu-btn text-start w-100">
+                            ❓ FAQ / Pytania
+                        </button>
+                    </a>
                 <?php endif; ?>
 
                 <?php if ($status === 'admin'): ?>
@@ -271,6 +276,14 @@ if ($status !== 'admin') {
                                     </div>
                                 </a>
                             </div>
+                             <div class="col-12 col-sm-4 text-center">
+                                <a href="pytania.html" class="text-decoration-none text-dark d-block h-100">
+                                    <div class="p-4 border rounded-4 bg-light h-100 shadow-sm border-0">
+                                        <div class="fs-2 mb-2">❓</div>
+                                        <div class="fw-bold">FAQ / Pytania</div>
+                                    </div>
+                                </a>
+                            </div>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -284,32 +297,45 @@ if ($status !== 'admin') {
 
     <!-- Skrypty JS zachowujące Twoją asynchroniczną logikę wylogowania/usuwania dla obu wersji menu -->
     <script>
+        // Funkcja odpowiedzialna za wylogowanie użytkownika
         const ObslugaWylogowania = () => {
+            // Wysłanie asynchronicznego żądania POST do skryptu wyloguj.php
             fetch('wyloguj.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })
             .then(() => {
+                // Po pomyślnym wykonaniu żądania, następuje przekierowanie użytkownika na stronę logowania
                 window.location.href = 'logowanie.php';
             });
         };
 
+        // Funkcja odpowiedzialna za całkowite usunięcie konta użytkownika
         const ObslugaUsuwaniaKonta = () => {
+            // Wyświetlenie systemowego okienka z prośbą o potwierdzenie akcji
+            // Kod wewnątrz bloku `if` wykona się tylko wtedy, gdy użytkownik kliknie "OK"
             if (confirm("Czy na pewno chcesz usunąć swoje konto? Ta operacja jest nieodwracalna!")) {
+                // Wysłanie żądania POST do skryptu usunKonto.php w celu usunięcia danych z bazy
                 fetch('usunKonto.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                 })
                 .then(() => {
+                    // Po pomyślnym usunięciu konta, użytkownik wraca na stronę logowania
                     window.location.href = 'logowanie.php';
                 });
             }
         };
 
-        // Podpięcie zdarzeń pod przyciski na komputerze (Id) i telefonie (Klasy)
+        // Podpięcie zdarzeń pod przyciski na komputerze (Id/Klasy) i telefonie (Klasy)
+        // Zastosowano tu operator opcjonalnego wywołania (?.) - dzięki temu kod nie wyrzuci błędu, 
+        // jeśli któregoś z przycisków akurat nie ma w strukturze HTML danej podstrony.
+
+        // Podpięcie funkcji wylogowywania do odpowiednich przycisków (desktop i mobile)
         document.querySelector('.desktop-logout-btn')?.addEventListener('click', ObslugaWylogowania);
         document.querySelector('.mobile-logout-btn')?.addEventListener('click', ObslugaWylogowania);
         
+        // Podpięcie funkcji usuwania konta do odpowiednich przycisków (desktop po ID, mobile po klasie)
         document.getElementById('usun')?.addEventListener('click', ObslugaUsuwaniaKonta);
         document.querySelector('.mobile-delete-btn')?.addEventListener('click', ObslugaUsuwaniaKonta);
     </script>

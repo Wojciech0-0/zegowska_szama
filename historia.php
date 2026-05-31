@@ -230,33 +230,63 @@ if(mysqli_num_rows($wynik1) < 1){
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        /**
+         * Funkcja obsługująca proces wylogowania użytkownika.
+         * Wysyła asynchroniczne żądanie POST do serwera, a po pomyślnym zakończeniu
+         * przekierowuje użytkownika na stronę logowania.
+         */
         const ObslugaWylogowania = () => {
+            // Wywołanie pliku backendowego odpowiedzialnego za zniszczenie sesji (session_destroy)
             fetch('wyloguj.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })
             .then(() => {
+                // Po pomyślnym wylogowaniu na serwerze, przekieruj na ekran logowania
                 window.location.href = 'logowanie.php';
+            })
+            .catch(err => {
+                // Logowanie ewentualnego błędu sieci w konsoli
+                console.error('Błąd podczas wylogowywania:', err);
             });
         };
 
+        /**
+         * Funkcja obsługująca bezpowrotne usunięcie konta użytkownika.
+         * Wyświetla systemowe okienko confirm(). Jeśli użytkownik potwierdzi,
+         * wysyła żądanie usuwające rekord z bazy danych i przekierowuje na stronę logowania.
+         */
         const ObslugaUsuwaniaKonta = () => {
+            // Wyświetlenie okna dialogowego z pytaniem typu Tak/Nie
             if (confirm("Czy na pewno chcesz usunąć swoje konto? Ta operacja jest nieodwracalna!")) {
+                // Jeśli użytkownik kliknął "OK", wyślij żądanie do backendu
                 fetch('usunKonto.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                    // Warto tutaj w przyszłości przekazać np. token CSRF w body dla bezpieczeństwa
                 })
                 .then(() => {
+                    // Po udanym usunięciu konta w bazie, przenieś na stronę startową/logowania
                     window.location.href = 'logowanie.php';
+                })
+                .catch(err => {
+                    console.error('Błąd podczas usuwania konta:', err);
                 });
             }
         };
 
+        // ==========================================
+        // REJESTRACJA NASŁUCHIWACZY ZDARZEŃ (EVENTS)
+        // ==========================================
+
+        // Obsługa wylogowania dla wersji desktopowej i mobilnej
+        // Operator '?.' (Optional Chaining) zapobiega błędowi crashowania skryptu, jeśli dany element nie istnieje w DOM
         document.querySelector('.desktop-logout-btn')?.addEventListener('click', ObslugaWylogowania);
         document.querySelector('.mobile-logout-btn')?.addEventListener('click', ObslugaWylogowania);
         
+        // Obsługa usuwania konta dla wersji desktopowej (id="usun") oraz mobilnej (klasa)
         document.getElementById('usun')?.addEventListener('click', ObslugaUsuwaniaKonta);
-        document.querySelector('.mobile-delete-btn')?.addEventListener('click', ObslugaUsuwaniaKonta);
+        document.querySelector('.mobile-delete-btn')?.addEventListener('click', ObslubaUsuwaniaKonta);
     </script>
 </body>
 </html>

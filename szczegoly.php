@@ -1,61 +1,73 @@
 <?php
+// Uruchomienie lub wznowienie sesji – niezbędne do autoryzacji i identyfikacji użytkownika
 session_start();
 
-// Sprawdzamy błędy
+// --- CONFIGURACJA RAPORTOWANIA BŁĘDÓW ---
+// Włączenie wyświetlania błędów bezpośrednio na stronie (przydatne podczas deweloperki)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Brak sesji = natychmiastowy wypad do logowania
+// --- KONTROLA DOSTĘPU (AUTORYZACJA) ---
+// Jeśli zmienna sesyjna 'user_id' nie istnieje, użytkownik nie jest zalogowany -> wyrzucamy do logowania
 if (!isset($_SESSION['user_id'])) {
     header("Location: logowanie.php");
     exit;
 }
 
+// Przypisanie identyfikatora z sesji do zmiennej pomocniczej
 $status = $_SESSION['user_id'];
 
-// Blokada dla admina - admin nie powinien edytować profilu "ucznia" w tym miejscu
+// Blokada dla konta administratora – admin nie powinien edytować profilu klienckiego z tego poziomu
 if ($status === 'admin') {
     header("Location: konto.php");
     exit;
 }
 
+// --- POŁĄCZENIE Z BAZĄ DANYCH ---
 $db = mysqli_connect('localhost', 'root', '', 'zegowskaszama');
 if (!$db) {
     die("Błąd połączenia z bazą: " . mysqli_connect_error());
 }
+// Ustawienie kodowania znaków na utf8mb4 dla pełnej obsługi polskich znaków
 mysqli_set_charset($db, "utf8mb4");
 
+// Inicjalizacja zmiennych do obsługi powiadomień systemowych
 $komunikat = "";
-$status_komunikatu = "";
+$status_komunikatu = ""; // Przechowuje klasę CSS dla Bootstrapa (np. success, danger)
 
 // --- OBSŁUGA AKTUALIZACJI DANYCH (Po kliknięciu "Zapisz zmiany") ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zapisz_dane'])) {
+    // Pobranie danych z tablicy POST i odcięcie zbędnych spacji (trim)
     $nowe_imie = trim($_POST['imie']);
     $nowe_nazwisko = trim($_POST['nazwisko']);
     $nowy_email = trim($_POST['email']);
 
+    // Sprawdzenie czy użytkownik nie wyczyścił pól formularza
     if (!empty($nowe_imie) && !empty($nowe_nazwisko) && !empty($nowy_email)) {
+        // Przygotowanie zapytania UPDATE z zabezpieczeniem danych przed atakami SQL Injection
         $sql_update = "UPDATE użytkownicy SET 
                        Imie = '" . mysqli_real_escape_string($db, $nowe_imie) . "', 
                        Nazwisko = '" . mysqli_real_escape_string($db, $nowe_nazwisko) . "', 
                        Email = '" . mysqli_real_escape_string($db, $nowy_email) . "' 
                        WHERE id = '" . mysqli_real_escape_string($db, $status) . "'";
 
+        // Wykonanie zapytania aktualizującego dane
         if (mysqli_query($db, $sql_update)) {
             $komunikat = "Dane zostały pomyślnie zaktualizowane!";
-            $status_komunikatu = "success";
+            $status_komunikatu = "success"; // Zielony alert
         } else {
             $komunikat = "Błąd podczas zapisu danych: " . mysqli_error($db);
-            $status_komunikatu = "danger";
+            $status_komunikatu = "danger"; // Czerwony alert
         }
     } else {
         $komunikat = "Wszystkie pola muszą być wypełnione!";
-        $status_komunikatu = "warning";
+        $status_komunikatu = "warning"; // Żółty alert
     }
 }
 
 // --- POBIERANIE AKTUALNYCH DANYCH UŻYTKOWNIKA ---
+// Zapytanie pobiera dane aktualnie zalogowanej osoby do uzupełnienia pól input value
 $sql = "SELECT Imie, Nazwisko, Email FROM użytkownicy WHERE id = '" . mysqli_real_escape_string($db, $status) . "'";
 $wynik = mysqli_query($db, $sql);
 
@@ -65,6 +77,7 @@ if ($wynik && mysqli_num_rows($wynik) == 1) {
     $nazwisko_uzytkownika = $uzytkownik['Nazwisko'];
     $email_uzytkownika = $uzytkownik['Email'];
 } else {
+    // Awaryjne przerwanie skryptu, jeśli rekord użytkownika nagle zniknął z bazy
     die("Nie znaleziono użytkownika w bazie.");
 }
 ?>
@@ -75,18 +88,23 @@ if ($wynik && mysqli_num_rows($wynik) == 1) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Szczegóły Konta - Zegowska Szama</title>
     <link rel="icon" type="image/png" href="logo.png">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
+    
     <style>
+        /* Kołowy podgląd awatara użytkownika */
         .avatar-circle {
             width: 70px; 
             height: 70px; 
-            background-color: #8db63f !important;
+            background-color: #8db63f !important; /* Zielony kolor przewodni */
             flex-shrink: 0;
         }
+        /* Ukrywanie klasycznej bocznej nawigacji na ekranach mobilnych i tabletach */
         @media (max-width: 991.98px) {
             .desktop-sidebar { display: none !important; }
         }
+        /* Przycisk menu hamburgerowego dla urządzeń mobilnych */
         .hamburger-btn {
             background: none; border: 1px solid #dee2e6; padding: 8px 12px; border-radius: 12px; color: #333; transition: all 0.2s ease;
         }
@@ -143,7 +161,7 @@ if ($wynik && mysqli_num_rows($wynik) == 1) {
         </div>
     </div>
 
-    <main class="container-fluid">
+    <div class="container-fluid">
         <div class="row">
 
             <aside class="col-xl-3 col-lg-4 sidebar desktop-sidebar p-4 bg-light shadow-sm min-vh-100">
@@ -232,21 +250,24 @@ if ($wynik && mysqli_num_rows($wynik) == 1) {
             </section>
 
         </div>
-    </main>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // Funkcja wysyłająca żądanie wylogowania sesji
         const ObslugaWylogowania = () => {
             fetch('wyloguj.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })
             .then(() => {
+                // Po pomyślnym zniszczeniu sesji przez serwer, następuje relokacja na logowanie
                 window.location.href = 'logowanie.php';
             });
         };
 
+        // Funkcja usuwająca trwale konto użytkownika po potwierdzeniu dialogu modalnego
         const ObslugaUsuwaniaKonta = () => {
             if (confirm("Czy na pewno chcesz usunąć swoje konto? Ta operacja jest nieodwracalna!")) {
                 fetch('usunKonto.php', {
@@ -254,11 +275,16 @@ if ($wynik && mysqli_num_rows($wynik) == 1) {
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                 })
                 .then(() => {
+                    // Po usunięciu konta przenosimy użytkownika na stronę startową autoryzacji
                     window.location.href = 'logowanie.php';
                 });
             }
         };
 
+        /* Podpięcie zdarzeń click pod selektory desktopowe oraz mobilne.
+           Zastosowany operator Optional Chaining (?.) chroni przed błędami skryptu,
+           w sytuacji gdyby dany element nie wyrenderował się w strukturze DOM.
+        */
         document.querySelector('.desktop-logout-btn')?.addEventListener('click', ObslugaWylogowania);
         document.querySelector('.mobile-logout-btn')?.addEventListener('click', ObslugaWylogowania);
         

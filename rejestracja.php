@@ -1,53 +1,74 @@
 <?php
+// Inicjalizacja zmiennych do obsługi komunikatów dla użytkownika (np. o błędzie lub sukcesie)
 $komunikat = "";
-$klasa_komunikatu = "d-none";
+$klasa_komunikatu = "d-none"; // Domyślnie ukrywa element z komunikatem w warstwie HTML/CSS (np. Bootstrap)
 
+// Sprawdzenie, czy formularz został przesłany metodą POST oraz czy kliknięto przycisk "zarejestruj"
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['zarejestruj'])) {
     
-    
-
+    // Nawiązanie połączenia z bazą danych
     $db = mysqli_connect('localhost', 'root', '', 'zegowskaszama');
 
+    // Weryfikacja, czy połączenie z bazą danych powiodło się
     if (!$db) {
         die("Błąd połączenia z bazą: " . mysqli_connect_error());
     }
 
+    // Pobranie danych z formularza, oczyszczenie ich ze zbędnych spacji na początku i końcu (trim)
+    // oraz zabezpieczenie przed atakami typu SQL Injection za pomocą mysqli_real_escape_string
     $imie = mysqli_real_escape_string($db, trim($_POST['Imie']));
     $nazwisko = mysqli_real_escape_string($db, trim($_POST['Nazwisko']));
     $email = mysqli_real_escape_string($db, trim($_POST['email']));
     $haslo = trim($_POST['password']);
-    $haslo2 = trim($_POST['password2']);
+    $haslo2 = trim($_POST['password2']); // Powtórzone hasło do weryfikacji poprawności
 
+    // KROK 1: Walidacja – sprawdzenie, czy wszystkie wymagane pola zostały wypełnione
     if (empty($imie) || empty($nazwisko) || empty($email) || empty($haslo) || empty($haslo2)) {
         $komunikat = "Wszystkie pola są wymagane!";
-        $klasa_komunikatu = "alert-danger";
+        $klasa_komunikatu = "alert-danger"; // Czerwona ramka błędu
+    
+    // KROK 2: Sprawdzenie, czy oba wprowadzone hasła są dokładnie takie same
     } elseif ($haslo !== $haslo2) {
         $komunikat = "Podane hasła nie są identyczne!";
         $klasa_komunikatu = "alert-danger";
+    
     } else {
+        // KROK 3: Sprawdzenie, czy podany adres e-mail nie istnieje już w bazie danych
+        // Szukamy go zarówno w tabeli użytkowników, jak i w tabeli administratorów
         $sql_check = "SELECT id FROM użytkownicy WHERE email = '$email'";
         $result_check = mysqli_query($db, $sql_check);
+        
         $sql_check1 = "SELECT id FROM `admin` WHERE email = '$email'";
         $result_check1 = mysqli_query($db, $sql_check1);
 
+        // Jeśli zapytanie zwróciło chociaż jeden wiersz w którejś z tabel, e-mail jest zajęty
         if (mysqli_num_rows($result_check) > 0 || mysqli_num_rows($result_check1) > 0) {
             $komunikat = "Ten adres e-mail jest już zajęty!";
             $klasa_komunikatu = "alert-danger";
+        
         } else {
+            // KROK 4: Bezpieczne hashowanie hasła za pomocą algorytmu bcrypt (PASSWORD_DEFAULT)
+            // Nigdy nie zapisujemy haseł w bazie danych w formie czystego tekstu!
             $haslo_hash = password_hash($haslo, PASSWORD_DEFAULT);
 
+            // Przygotowanie zapytania dodającego nowego użytkownika do bazy danych
             $sql_insert = "INSERT INTO użytkownicy (Imie, Nazwisko, Email, Haslo) VALUES ('$imie', '$nazwisko', '$email', '$haslo_hash')";
 
+            // Wykonanie zapytania i sprawdzenie, czy rejestracja się powiodła
             if (mysqli_query($db, $sql_insert)) {
                 $komunikat = "Rejestracja pomyślna! Za chwilę nastąpi przekierowanie...";
-                $klasa_komunikatu = "alert-success";
+                $klasa_komunikatu = "alert-success"; // Zielona ramka sukcesu
+                
+                // Przekierowanie użytkownika na stronę logowania po upływie 2 sekund
                 header("refresh:2; url=logowanie.php");
             } else {
+                // Obsługa ewentualnego błędu bazy danych podczas zapisu
                 $komunikat = "Błąd podczas rejestracji: " . mysqli_error($db);
                 $klasa_komunikatu = "alert-danger";
             }
         }
     }
+    // Zamknięcie połączenia z bazą danych
     mysqli_close($db);
 }
 ?>
