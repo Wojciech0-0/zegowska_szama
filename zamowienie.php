@@ -26,7 +26,7 @@ $wynik1 = mysqli_query($db, $sql1);
         
         $sql = "INSERT INTO zamówienia VALUES (NULL, '" . mysqli_real_escape_string($db, $status) . "', '" . mysqli_real_escape_string($db, $id_prod) . "', 
                         '$data', 
-                        '$indeks')";
+                        '$indeks' , 0)";
                         
         mysqli_query($db, $sql);
     }
